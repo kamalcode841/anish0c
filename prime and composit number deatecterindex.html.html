@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>संख्या पहिचानकर्ता (Prime and Composite Detector)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            text-align: left;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #3498db;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #219150;
+        }
+        /* Result styling */
+        #result {
+            margin-top: 1.5rem;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            min-height: 1.5em;
+        }
+        .prime {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .composite {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        /* Hidden text for screen readers if needed */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" role="main">
+    <h1>संख्या पहिचानकर्ता</h1>
+    
+    <div class="input-group">
+        <label for="numberInput">कृपया एउटा संख्या राख्नुहोस्:</label>
+        <input type="number" id="numberInput" placeholder="उदा: ७, १०, १५" aria-required="true">
+    </div>
+
+    <button onclick="checkNumber()">जाँच गर्नुहोस्</button>
+
+    <!-- aria-live="polite" helps NVDA announce changes automatically -->
+    <div id="result" aria-live="polite" role="status">
+        तपाईँको नतिजा यहाँ देखिनेछ।
+    </div>
+    
+    <p style="margin-top: 20px; font-size: 0.9rem; color: #666;">
+        (यो एप NVDA र अन्य स्क्रिन रिडरका लागि अनुकूलित छ।)
+    </p>
+</div>
+
+<script>
+    function checkNumber() {
+        const input = document.getElementById('numberInput');
+        const resultDiv = document.getElementById('result');
+        const num = parseInt(input.value);
+
+        // Reset display
+        resultDiv.className = '';
+        
+        if (isNaN(num)) {
+            resultDiv.innerText = "कृपया एउटा मान्य संख्या टाइप गर्नुहोस्।";
+            resultDiv.classList.add('error');
+            return;
+        }
+
+        if (num <= 1) {
+            resultDiv.innerText = num + " न त रूढ (Prime) हो न त संयुक्त (Composite) संख्या हो।";
+            resultDiv.classList.add('error');
+        } else {
+            let isPrime = true;
+            for (let i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i === 0) {
+                    isPrime = false;
+                    break;
+                }
+            }
+
+            if (isPrime) {
+                resultDiv.innerText = num + " एउटा रूढ (Prime) संख्या हो।";
+                resultDiv.classList.add('prime');
+            } else {
+                resultDiv.innerText = num + " एउटा संयुक्त (Composite) संख्या हो।";
+                resultDiv.classList.add('composite');
+            }
+        }
+        
+        // Clear input for next use after a small delay if desired
+        // input.value = '';
+    }
+
+    // Allow "Enter" key to trigger the button
+    document.getElementById('numberInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            checkNumber();
+        }
+    });
+</script>
+
+</body>
+</html>
